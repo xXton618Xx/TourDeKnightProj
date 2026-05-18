@@ -8,11 +8,12 @@ if (isset($_SESSION['username'])) {
   }
   exit();
 }
-$auth = new atuhenticate();
+$auth = new authenticate();
 $success = false;
 $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $id = $_POST["acctid"]
+  $id = $_POST["acctid"];
+  // continue by xXton618Xx
 }
 ?>
 <!DOCTYPE html>
