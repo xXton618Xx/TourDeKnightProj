@@ -1,3 +1,20 @@
+<?php require_once "backend/auth.php";
+session_start();
+if (isset($_SESSION['username'])) {
+  if ($_SESSION['role'] == "player") {
+    header("Location: player_dashboard.php");
+  } else {
+    header("Location: admin_dashboard.php");
+  }
+  exit();
+}
+$auth = new atuhenticate();
+$success = false;
+$message = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $id = $_POST["acctid"]
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -109,5 +126,6 @@
         </div>
       </div>
     </div>
+    <script src="script.js"></script>
   </body>
 </html>

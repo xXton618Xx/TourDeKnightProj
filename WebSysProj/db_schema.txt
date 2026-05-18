@@ -36,3 +36,7 @@ session variables = {
   session_id: auto_generated for every game initiated
   username: from account_information
 }
+
+input_names = {
+  register: [acctid, fname, sname, email, usrnm, dob, cpass, isAdmin]
+}

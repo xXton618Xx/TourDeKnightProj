@@ -1,4 +1,3 @@
-<?php # TODO: add content later ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
