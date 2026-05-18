@@ -25,19 +25,17 @@ class authenticate {
     if ($res->num_rows === 0) {
       return ["success" => false, "message" => "Email or username does not exist"];
     } else {
-      $user = $res->fetch_assoc() {
-        if (password_verify($pass, $user["password"])) {
-          session_regenerate_id(true);
-          $_SESSION["username"] = $user["username"];
-          $_SESSION["role"] = $user["role"];
-          return ["success" => true, "message" => "200"];
-        } else {
-          return ["success" => false, "message" => "Incorrect Password, try again"].
-        }
+      $user = $res->fetch_assoc();
+      if (password_verify($pass, $user["password"])) {
+        session_regenerate_id(true);
+        $_SESSION["username"] = $user["username"];
+        $_SESSION["role"] = $user["role"];
+        return ["success" => true, "message" => "200"];
+      } else {
+        return ["success" => false, "message" => "Incorrect Password, try again"];
       }
     }
   }
-
   #public function what function
 }
 ?>
