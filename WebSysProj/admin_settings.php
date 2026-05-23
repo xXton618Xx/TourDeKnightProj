@@ -15,7 +15,6 @@
                 <div style="font-size: 0.85em; color: #fffbeb;">Admin</div>
             </div>
         </div>
-
         <div class="linkList">
             <div class="linkRef" onclick="window.location.href='admin_dashboard.php'">
                 <span>🏠</span>
@@ -41,7 +40,6 @@
             </div>
         </div>
     </div>
-
     <div class="mainViewport">
         <div class="searchHeader">
             <span class="i-collapse">☰</span>
@@ -53,11 +51,9 @@
                 <div class="capital" style="cursor: pointer;">KD</div>
             </div>
         </div>
-
         <div class="dashViewport">
             <h1 style="margin: 0 0 10px 0; font-size: 2.2em;">System Settings</h1>
             <p style="margin: 0 0 30px 0; color: #666;">Global Configuration for the platform.</p>
-
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
                 <div style="border: 1px solid #ddd; border-radius: 16px; padding: 20px;">
                     <h3 style="margin: 0 0 5px 0; font-size: 1.1em;">System theme</h3>
@@ -68,7 +64,6 @@
                         <option>Dark</option>
                     </select>
                 </div>
-
                 <div style="border: 1px solid #ddd; border-radius: 16px; padding: 20px;">
                     <h3 style="margin: 0 0 5px 0; font-size: 1.1em;">Account options</h3>
                     <p style="margin: 0 0 15px 0; color: #666; font-size: 0.9em;">User registration controls.</p>
@@ -87,7 +82,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div style="border: 1px solid #ddd; border-radius: 16px; padding: 20px;">
                     <h3 style="margin: 0 0 5px 0; font-size: 1.1em;">Board verifier algorithm</h3>
                     <p style="margin: 0 0 15px 0; color: #666; font-size: 0.9em;">Strategy used to validate tours.</p>
@@ -101,7 +95,6 @@
                         <input type="checkbox" style="width: 40px; height: 24px; cursor: pointer; accent-color: rgb(105, 0, 153);">
                     </div>
                 </div>
-
                 <div style="border: 1px solid #ddd; border-radius: 16px; padding: 20px;">
                     <h3 style="margin: 0 0 5px 0; font-size: 1.1em;">Mini-report generator</h3>
                     <p style="margin: 0 0 15px 0; color: #666; font-size: 0.9em;">Export usage and audit reports.</p>
@@ -116,7 +109,6 @@
             </div>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

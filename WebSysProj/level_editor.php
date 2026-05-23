@@ -1,235 +1,94 @@
+<?php require_once "backend/auth.php";
+session_start();
+if (!isset($_SESSION['username'])) {
+  header("Location: index.php");
+  exit();
+}
+if ($_SESSION['role'] == "player") {
+  header("Location: player_dashboard.php");
+  exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tour de Knight - Level Editor</title>
+    <meta name="viewport" content="width=`device-width`, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-</head>
-<body class="pDashBody">
+    <link rel="stylesheet" href="admin_style.css">
+    <title>Tour de Knight - Editor</title>
+  </head>
+  <body class="pDashBody">
     <div class="leftSidebar">
-        <div class="dashbgHeader" style="padding: 15px 10px;">
-            <span class="dashIcon">♞</span>
-            <div style="margin-left: 10px;">
-                <div class="dashheadName">Tour de Knight</div>
-                <div style="font-size: 0.85em; color: #fffbeb;">Admin</div>
-            </div>
+      <div class="dashbgHeader">
+        <div class="dashIcon">♞</div>
+        <div>
+          <div class="dashheadName">Tour de Knight</div>
+          <div>Player</div>
         </div>
-
-        <div class="linkList">
-            <div class="linkRef" onclick="window.location.href='admin_dashboard.php'">
-                <span>🏠</span>
-                <span style="margin-left: 10px;">Home</span>
-            </div>
-            <div class="linkRef" style="background-color: rgba(255, 255, 255, 0.3);" onclick="window.location.href='level_editor.php'">
-                <span>🎮</span>
-                <span style="margin-left: 10px;">Create Level</span>
-            </div>
-            <div class="linkRef">
-                <span>💬</span>
-                <span style="margin-left: 10px;">Discussion</span>
-            </div>
-            <div class="linkRef" onclick="window.location.href='admin_settings.php'">
-                <span>⚙️</span>
-                <span style="margin-left: 10px;">Settings</span>
-            </div>
+      </div>
+      <div class="linkList" >
+        <div class="linkRef" onclick="window.location.href='admin_dashboard_c.php'">Home</div>
+        <div class="linkRef">Level Editor</div>
+        <div class="linkRef">Discussions</div>
+        <div class="linkRef" onclick="window.location.href='admin_settings.php'">Settings</div>
+      </div>
+      <div class="dashbgFooter">
+        <div class="dashIcon">♞</div>
+        <div>
+          <a class="dashFootName" href="backend/logout.php">Log Out</a>
         </div>
-
-        <div class="dashbgFooter" style="padding: 15px 10px; justify-content: space-between;">
-            <div>
-                <div class="dashFootName">Log out</div>
-            </div>
-        </div>
+      </div>
     </div>
-
     <div class="mainViewport">
-        <div class="searchHeader">
-            <span class="i-collapse">☰</span>
-            <div class="searchbar">
-                <input type="text" class="search" placeholder="Search...">
-            </div>
-            <div style="margin-left: auto; margin-right: 20px; display: flex; gap: 15px; align-items: center;">
-                <span style="font-size: 1.5em; cursor: pointer;">📋</span>
-                <div class="capital" style="cursor: pointer;">KD</div>
-            </div>
+      <div class="searchHeader">
+        <div class="i-collapse">&#9776</div>
+        <div class="searchbar">
+          <form method="post">
+            <input type="text" name="search" class="search" id="search" placeholder="Search Here">
+          </form>
         </div>
-
-        <div class="dashViewport" style="overflow-y: auto; display: flex; flex-direction: column;">
-            <div style="flex-shrink: 0;">
-                <h1 style="margin: 0 0 10px 0; font-size: 2em;">Level Editor</h1>
-                <p style="margin: 0 0 20px 0; color: #666;">Design custom boards and restrictions.</p>
+        <div class="capital">KD</div>
+      </div>
+      <div class="dashViewport">
+        <div class="editor-container">
+          <!-- Editor Viewport (Left/Center) -->
+          <div class="board-viewport">
+            <div class="editor-settings">
+              <label>Width: <input type="number" id="board-width" min="5" max="15" value="8"></label>
+              <label>Height: <input type="number" id="board-height" min="5" max="15" value="8"></label>
+              <label>Difficulty: 
+                <select id="board-difficulty">
+                  <option value="Easy">Easy</option>
+                  <option value="Average">Average</option>
+                  <option value="Hard">Hard</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </label>
+              <button id="btn-generate">Regenerate Board</button>
             </div>
-
-            <div style="display: flex; gap: 25px; flex: 1; min-height: 0;">
-                <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                    <div style="border: 2px solid #bba9d1; border-radius: 16px; padding: 20px; flex-shrink: 0;">
-                        <h3 style="margin: 0 0 10px 0; font-size: 1.1em;">Board workspace</h3>
-                        <p style="margin: 0 0 15px 0; color: #666; font-size: 0.9em;">Click cells to mark as blocked.</p>
-                        
-                        <div style="display: inline-block; border: 3px solid #bba9d1; border-radius: 12px; overflow: hidden;">
-                            <div id="chessboard" style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 0; background: #fffbeb;">
-                                <!-- Board cells will be generated by JavaScript -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="border: 2px solid #bba9d1; border-radius: 16px; padding: 20px; margin-top: 20px; flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                        <h3 style="margin: 0 0 15px 0; font-size: 1.1em; flex-shrink: 0;">Status Terminal</h3>
-                        <div id="statusTerminal" style="background-color: #f5f5f5; border: 1px solid #ccc; border-radius: 8px; padding: 15px; flex: 1; overflow-y: auto; font-family: monospace; font-size: 0.9em; line-height: 1.6;">
-                            <div>[editor] board 8x8 initialized</div>
-                            <div>[editor] 0 blocked tiles</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="width: 220px; flex-shrink: 0;">
-                    <div style="border: 2px solid #bba9d1; border-radius: 16px; padding: 20px; position: sticky; top: 0;">
-                        <h3 style="margin: 0 0 20px 0; font-size: 1.1em;">Controls</h3>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95em;">Board size:</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="number" id="boardWidth" value="8" min="4" max="12" style="width: 50%; padding: 8px; border: 1px solid #bba9d1; border-radius: 6px;">
-                                <span style="display: flex; align-items: center;">x</span>
-                                <input type="number" id="boardHeight" value="8" min="4" max="12" style="width: 50%; padding: 8px; border: 1px solid #bba9d1; border-radius: 6px;">
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95em;">Tile color</label>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <input type="color" id="tileColor" value="#9335C7" style="width: 50px; height: 40px; border: 1px solid #bba9d1; border-radius: 6px; cursor: pointer;">
-                                <input type="text" id="colorHex" value="#9335C7" style="flex: 1; padding: 8px; border: 1px solid #bba9d1; border-radius: 6px; font-size: 0.85em;">
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95em;">Restrictions</label>
-                            <div style="background-color: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px;">
-                                <div style="font-size: 0.9em;">Blocked cells: <span id="blockedCount">0</span></div>
-                            </div>
-                        </div>
-
-                        <div style="display: flex; gap: 10px;">
-                            <button id="verifyBtn" style="flex: 1; padding: 10px; background-color: rgb(105, 0, 153); color: #fffbeb; border: 1px solid rgb(105, 0, 153); border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95em;">Verify</button>
-                            <button id="saveBtn" style="flex: 1; padding: 10px; background-color: #fffbeb; color: rgb(105, 0, 153); border: 1px solid rgb(105, 0, 153); border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95em;">Save</button>
-                        </div>
-                    </div>
-                </div>
+            <div id="board-grid" class="board-grid"></div>
+          </div>
+          <!-- Right Sidebar / Toolbox -->
+          <div class="right-toolbar">
+            <h3>Toolbox</h3>
+            <div class="tool-group">
+              <label><input type="radio" name="tool" value="block" checked> Block Cell</label>
+              <label><input type="radio" name="tool" value="erase"> Erase</label>
+              <!-- These should only be visible/enabled for Advanced difficulty -->
+              <div id="advanced-tools" style="display: none; margin-top: 10px;">
+                <label><input type="radio" name="tool" value="start"> Set Start (S)</label>
+                <label><input type="radio" name="tool" value="end"> Set End (E)</label>
+              </div>
             </div>
+            <div class="action-buttons">
+              <button id="btn-verify">Verify Board</button>
+              <button id="btn-save">Save Level</button>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-
-    <script src="script.js"></script>
-    <script>
-        let boardSize = { width: 8, height: 8 };
-        let tileColor = '#9335C7';
-        let blockedCells = new Set();
-
-        function generateBoard() {
-            const board = document.getElementById('chessboard');
-            board.innerHTML = '';
-            blockedCells.clear();
-            
-            board.style.gridTemplateColumns = `repeat(${boardSize.width}, 1fr)`;
-            
-            for (let row = 0; row < boardSize.height; row++) {
-                for (let col = 0; col < boardSize.width; col++) {
-                    const cell = document.createElement('div');
-                    const isWhite = (row + col) % 2 === 0;
-                    cell.style.width = '45px';
-                    cell.style.height = '45px';
-                    cell.style.backgroundColor = isWhite ? '#fffbeb' : tileColor;
-                    cell.style.cursor = 'pointer';
-                    cell.style.border = 'none';
-                    cell.style.transition = 'background-color 0.2s';
-                    cell.dataset.row = row;
-                    cell.dataset.col = col;
-                    
-                    cell.addEventListener('click', () => toggleCell(cell));
-                    cell.addEventListener('mouseover', () => {
-                        cell.style.opacity = '0.8';
-                    });
-                    cell.addEventListener('mouseout', () => {
-                        cell.style.opacity = '1';
-                    });
-                    
-                    board.appendChild(cell);
-                }
-            }
-            updateBlockedCount();
-        }
-
-        function toggleCell(cell) {
-            const key = `${cell.dataset.row}-${cell.dataset.col}`;
-            const isWhite = (parseInt(cell.dataset.row) + parseInt(cell.dataset.col)) % 2 === 0;
-            
-            if (blockedCells.has(key)) {
-                blockedCells.delete(key);
-                cell.style.backgroundColor = isWhite ? '#fffbeb' : tileColor;
-            } else {
-                blockedCells.add(key);
-                cell.style.backgroundColor = '#666';
-            }
-            updateBlockedCount();
-            addTerminalLog(`[editor] toggled cell (${cell.dataset.row}, ${cell.dataset.col})`);
-        }
-
-        function updateBlockedCount() {
-            document.getElementById('blockedCount').textContent = blockedCells.size;
-        }
-
-        function addTerminalLog(message) {
-            const terminal = document.getElementById('statusTerminal');
-            const div = document.createElement('div');
-            div.textContent = message;
-            terminal.appendChild(div);
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        document.getElementById('tileColor').addEventListener('change', (e) => {
-            tileColor = e.target.value;
-            document.getElementById('colorHex').value = tileColor;
-            generateBoard();
-            addTerminalLog(`[editor] tile color changed to ${tileColor}`);
-        });
-
-        document.getElementById('colorHex').addEventListener('change', (e) => {
-            if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
-                tileColor = e.target.value;
-                document.getElementById('tileColor').value = tileColor;
-                generateBoard();
-                addTerminalLog(`[editor] tile color changed to ${tileColor}`);
-            }
-        });
-
-        document.getElementById('boardWidth').addEventListener('change', (e) => {
-            boardSize.width = Math.max(4, Math.min(12, parseInt(e.target.value)));
-            generateBoard();
-            addTerminalLog(`[editor] board ${boardSize.width}x${boardSize.height} initialized`);
-        });
-
-        document.getElementById('boardHeight').addEventListener('change', (e) => {
-            boardSize.height = Math.max(4, Math.min(12, parseInt(e.target.value)));
-            generateBoard();
-            addTerminalLog(`[editor] board ${boardSize.width}x${boardSize.height} initialized`);
-        });
-
-        document.getElementById('verifyBtn').addEventListener('click', () => {
-            addTerminalLog('[editor] verifying board...');
-            setTimeout(() => {
-                addTerminalLog('[editor] board verification complete');
-            }, 500);
-        });
-
-        document.getElementById('saveBtn').addEventListener('click', () => {
-            addTerminalLog('[editor] saving board...');
-            setTimeout(() => {
-                addTerminalLog('[editor] board saved successfully');
-            }, 500);
-        });
-
-        generateBoard();
-    </script>
-</body>
+    <script src="scripts/script.js"></script>
+  </body>
 </html>

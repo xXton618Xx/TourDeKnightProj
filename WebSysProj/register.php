@@ -4,16 +4,21 @@ if (isset($_SESSION['username'])) {
   if ($_SESSION['role'] == "player") {
     header("Location: player_dashboard.php");
   } else {
-    header("Location: admin_dashboard.php");
+    header("Location: admin_dashboard_c.php");
   }
   exit();
 }
 $auth = new authenticate();
-$success = false;
 $message = "";
+$success = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $id = $_POST["acctid"];
-  // continue by xXton618Xx
+  $isAdmin = isset($_POST['isAdmin']) ? 'admin' : 'player';
+  $res = $auth->register_user(
+    $_POST["acctid"], $_POST["fname"], $_POST["sname"], $_POST["email"],
+    $_POST["usrnm"], $_POST["dob"], $_POST["cpass"], $isAdmin
+  );
+  $message = $res['message'];
+  $success = $res['success'];
 }
 ?>
 <!DOCTYPE html>
@@ -45,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <label for="fname">First Name</label>
                 </div>
                 <div class="regInput">
-                  <input type="text" name="fname" required>
+                  <input type="text" name="fname" id="fname" required>
                 </div>
               </div>
               <div class="lastname">
@@ -53,16 +58,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <label for="sname">Surname</label>
                 </div>
                 <div class="regInput">
-                  <input type="text" name="sname" required>
+                  <input type="text" name="sname" id="sname" required>
                 </div>
               </div>
             </div>
+            <div class="validName" id="validName"></div>
             <div class="inputField">
               <div class="regLabel">
                 <label for="email">Email Address</label>
               </div>
               <div class="regInput">
-                <input type="text" class="singLineField" name="email"  required>
+                <input type="email" class="singLineField" name="email" placeholder="example@mail.com" required>
               </div>
             </div>
             <div class="nameField">
@@ -71,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <label for="usrnm">Username</label>
                 </div>
                 <div class="regInput">
-                  <input type="text" name="usrnm" required>
+                  <input type="text" name="usrnm" id="usrnm" required>
                 </div>
               </div>
               <div class="lastname">
@@ -83,6 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
               </div>
             </div>
+            <div class="validUsrnm" id="validUsrnm"></div>
             <div class="nameField">
               <div class="firstname">
                 <div class="regLabel">
@@ -101,12 +108,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
               </div>
             </div>
+            <div class="validatePass" id="validatePass">
+              <ul>
+                <li id="isEight">Must contain at least 8 characters</li>
+                <li id="hasNums">Must contain 0-9</li>
+                <li id="hasChars">Must contain special characters</li>
+              </ul>
+            </div>
             <div class="isAdmin">
               <input type="checkbox" name="isAdmin" id="isAdmin" value="admin">
               <label for="isAdmin">Register as Administrator</label>
             </div>
             <div class="submit">
-              <button type="submit">Register</button>
+              <button type="submit" id="submit" disabled>Register</button>
             </div>
           </form>
         </div>
@@ -127,6 +141,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
       </div>
     </div>
-    <script src="script.js"></script>
+    <div class="modalWindow" id="modalWindow" style="display: <?= $success ? 'flex' : 'none'; ?>;">
+      <div class="modalContent">
+        <p><?= $message; ?></p> 
+        <p>Use your email or username to log in</p>
+        <div class="login">
+          <a href="index.php" id="loginRedir">Log In</a>
+        </div>
+      </div>
+    </div>
+    <script src="scripts/validate.js"></script>
+    <script>
+      // script to generate account ID, sensitive to 
+      // row count and what is the last row.
+      function generateAccountId() {
+        let init = "abcdefghjklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let output = ""
+        for (let i = 0; i < 15; i++) {
+          let randNum = Math.floor(Math.random() * init.length);
+          output += init.charAt(randNum)
+        }
+        return output
+      }
+      let acctid = document.getElementById("acctid")
+      acctid.value = generateAccountId()
+    </script>
   </body>
 </html>

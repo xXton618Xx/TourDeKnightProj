@@ -1,0 +1,65 @@
+levels list
++--------------+------------------------------------------+------+-----+---------+-------+
+| Field        | Type                                     | Null | Key | Default | Extra |
++--------------+------------------------------------------+------+-----+---------+-------+
+| level_id     | varchar(50)                              | NO   | PRI | NULL    |       |
+| board_width  | int(5)                                   | NO   |     | NULL    |       |
+| board_height | int(5)                                   | NO   |     | NULL    |       |
+| difficulty   | enum('Easy','Average','Hard','Advanced') | NO   |     | NULL    |       |
+| start_x      | tinyint(4)                               | YES  |     | NULL    |       |
+| start_y      | tinyint(4)                               | YES  |     | NULL    |       |
+| end_x        | tinyint(4)                               | YES  |     | NULL    |       |
+| end_y        | tinyint(4)                               | YES  |     | NULL    |       |
+| is_published | tinyint(1)                               | YES  |     | 1       |       |
++--------------+------------------------------------------+------+-----+---------+-------+
+
+account infos
++------------+------------------------+------+-----+---------+-------+
+| Field      | Type                   | Null | Key | Default | Extra |
++------------+------------------------+------+-----+---------+-------+
+| acct_id    | varchar(255)           | NO   | PRI | NULL    |       |
+| first_name | varchar(100)           | NO   |     | NULL    |       |
+| surname    | varchar(100)           | NO   |     | NULL    |       |
+| email_addr | varchar(255)           | NO   |     | NULL    |       |
+| username   | varchar(30)            | NO   |     | NULL    |       |
+| birthdate  | date                   | NO   |     | NULL    |       |
+| password   | varchar(255)           | NO   |     | NULL    |       |
+| role       | enum('player','admin') | NO   |     | player  |       |
++------------+------------------------+------+-----+---------+-------+
+
+blocked cells
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| cell_id  | int(11)     | NO   | PRI | NULL    | auto_increment |
+| level_id | varchar(50) | NO   | MUL | NULL    |                |
+| x_pos    | tinyint(4)  | NO   |     | NULL    |                |
+| y_pos    | tinyint(4)  | NO   |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+
+move history
++-------------+---------------------+------+-----+---------------------+----------------+
+| Field       | Type                | Null | Key | Default             | Extra          |
++-------------+---------------------+------+-----+---------------------+----------------+
+| move_id     | int(11)             | NO   | PRI | NULL                | auto_increment |
+| session_id  | varchar(50)         | NO   | MUL | NULL                |                |
+| move_number | int(11)             | NO   |     | NULL                |                |
+| x_pos       | tinyint(4)          | NO   |     | NULL                |                |
+| y_pos       | tinyint(4)          | NO   |     | NULL                |                |
+| move_type   | enum('play','undo') | YES  |     | play                |                |
+| timestamp   | timestamp           | NO   |     | current_timestamp() |                |
++-------------+---------------------+------+-----+---------------------+----------------+
+
+game sessions
++---------------+------------------------------------------------------+------+-----+---------------------+-------------------------------+
+| Field         | Type                                                 | Null | Key | Default             | Extra                         |
++---------------+------------------------------------------------------+------+-----+---------------------+-------------------------------+
+| session_id    | varchar(50)                                          | NO   | PRI | NULL                |                               |
+| acct_id       | varchar(255)                                         | NO   |     | NULL                |                               |
+| level_id      | varchar(50)                                          | NO   | MUL | NULL                |                               |
+| total_moves   | int(11)                                              | YES  |     | 0                   |                               |
+| current_state | text                                                 | YES  |     | NULL                |                               |
+| status        | enum('in_progress','completed','failed','abandoned') | YES  |     | in_progress         |                               |
+| start_time    | timestamp                                            | NO   |     | current_timestamp() |                               |
+| last_played   | timestamp                                            | NO   |     | current_timestamp() | on update current_timestamp() |
++---------------+------------------------------------------------------+------+-----+---------------------+-------------------------------+

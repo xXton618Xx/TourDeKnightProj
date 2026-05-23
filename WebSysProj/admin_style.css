@@ -1,0 +1,45 @@
+.editor-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+.board-viewport {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-grid {
+  display: grid;
+  gap: 2px;
+  background-color: #333; /* Acts as the border color between cells */
+  padding: 2px;
+  margin-top: 20px;
+}
+
+.cell {
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+/* Cell States */
+.cell.dark { background-color: #ccc; } /* Chessboard pattern */
+.cell.blocked { background-color: #d9534f; } /* Red for blocked */
+.cell.start { background-color: #5cb85c; color: white; } /* Green for start */
+.cell.end { background-color: #f0ad4e; color: white; } /* Orange for end */
+.right-toolbar {
+  width: 250px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-left: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

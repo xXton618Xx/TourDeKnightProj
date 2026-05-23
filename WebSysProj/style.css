@@ -81,6 +81,30 @@ body {
   a {
     text-decoration: none;
   }}
+.validatePass, .validUsrnm, .validName {
+  font-size: 12px; }
+.validUsrnm, .validName {
+  color: red; }
+.modalWindow {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  top: 10;
+  left: 10;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: 0.5s ease-in-out; }
+.modalContent {
+  justify-content: space-between;
+  background-color: #fefefe;
+  width: 25%;
+  height: 150px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  padding-left: 20px;
+  border-radius: 16px; }
 /* END register.php styles */
 
 /* BEGIN index.php styles */
@@ -134,7 +158,9 @@ body {
   cursor: pointer; }
 .dashFootName {
   font-size: 1em;
-  font-weight: bold; }
+  font-weight: bold;
+  text-decoration: none;
+  color: white }
 .linkRef {
   width: 85%;
   height: 40px;
@@ -153,6 +179,7 @@ body {
 .searchHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 30px;
   margin: 10px; }
 .i-collapse {
@@ -294,3 +321,115 @@ body {
   border: 1px solid black;
   border-radius: 12px; }
 /* END player_settings.php styles */
+
+/* BEGIN overlay styles */
+/* The Dimmed Background */
+#gameOverlay {
+    position: fixed;
+    inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000; /* Ensures it sits on top of everything */
+    /* Flexbox centers the modal box inside the overlay */
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+/* Visibility Toggles */
+.overlayHide {
+    display: none !important;
+}
+/* The Modal Box */
+.modalContent {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    height: 35%;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* The 'X' Close Button */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #555;
+}
+
+.close-btn:hover {
+    color: #d9534f;
+}
+
+/* Basic form styling */
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group select {
+    width: 100%;
+    padding: 8px;
+}
+#btn-start-play {
+  width: 80px;
+  height: 30px;
+}
+/*END overlay styles*/
+
+/* BEGIN play_area.php */
+.playTitle, .playSubtitle {
+  color: #111;
+}
+.playTitle {
+  margin-bottom: 0;
+}
+.playingInterface {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+.chessBoard {
+  height: 400px;
+}
+.playStatus {
+  width: 200px;
+  height: 300px;
+  border: 1px solid gray;
+  border-radius: 12px;
+}
+.statusSubtitle {
+  padding: 10px 10px 10px 20px;
+  font-weight: bold;
+  font-size: 18px
+}
+.statusTable {
+  width: 100%;
+}
+.statusTbl {
+  border-collapse: collapse
+}
+.tblclass {
+  width: 100px;
+  padding-left: 10px;
+  font-weight: bold;
+}
+.tbldata {
+  width: 70px;
+}
+/* END play_area.php */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 10px;
+  margin-right: 10px;
+}

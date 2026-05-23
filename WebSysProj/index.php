@@ -1,10 +1,40 @@
+<?php require_once "backend/auth.php";
+session_start();
+if (isset($_SESSION['username'])) {
+  if ($_SESSION['role'] == "admin") {
+    header("Location: admin_dashboard_c.php");
+  } else {
+    header("Location: player_dashboard.php");
+  }
+  exit();
+}
+$auth = new authenticate();
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $usrnm = trim($_POST["usrnm"]);
+  $pass = $_POST["psswd"];
+  $res = $auth->login($usrnm, $pass);
+  if ($res["success"]) {
+    // if logged in user is admin, redirect to admin_dashboard.
+    if ($_SESSION['role'] === "player") {
+      header("Location: player_dashboard.php");
+      exit();
+    } else {
+      header("Location: admin_dashboard_c.php");
+      exit();
+    }
+  } else {
+    echo "<script>alert('" . $res['message'] . "');</script>";
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Log In or Signup</title>
+    <title>Log In or Signup</title> 
   </head>
   <body class="logBody">
     <div class="logImage">
